@@ -1,0 +1,26 @@
+{
+	"name": "fastly-ip2location-headers",
+	"version": "1.0.0",
+	"private": true,
+	"type": "module",
+	"description": "Fastly Compute service that enriches origin requests with IP2Location.io fields Fastly's own client geolocation does not provide.",
+	"scripts": {
+		"dev": "fastly compute serve",
+		"build": "fastly compute build",
+		"deploy": "fastly compute publish",
+		"typecheck": "tsc --noEmit",
+		"test": "bun test",
+		"live": "bun run scripts/live-check.ts"
+	},
+	"devDependencies": {
+		"@fastly/cli": "^16.1.0",
+		"@fastly/js-compute": "^3.46.0",
+		"typescript": "^5.6.0"
+	},
+	"overrides": {
+		"@bytecodealliance/weval": "^0.5.0"
+	},
+	"allowScripts": {
+		"esbuild@0.28.2": true
+	}
+}

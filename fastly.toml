@@ -1,0 +1,60 @@
+# This file describes a Fastly Compute package. To learn more visit:
+# https://www.fastly.com/documentation/reference/compute/fastly-toml
+
+authors = []
+description = "Adds IP2Location.io data to the origin request as headers, without redirecting or blocking"
+language = "javascript"
+manifest_version = 3
+name = "ip2location-headers"
+service_id = "c9o93STsONaJG2Gkobyl8E"
+
+# `fastly compute publish` creates and links these, so a deploy cannot land
+# without them. Before this existed the service shipped with only Fastly's
+# `originless` placeholder and every request failed to forward.
+[setup]
+
+  [setup.backends]
+
+    # A backend named here but given no values makes the CLI prompt for them at
+    # publish time. Pin `address` and `port` here once you know them.
+    [setup.backends.origin]
+
+    # Only address/port/description are settable here; the CLI's SetupBackend
+    # schema has no use_ssl/override_host field. Verify SSL after publishing.
+    [setup.backends.ip2location]
+      address = "api.ip2location.io"
+      port = 443
+      description = "IP2Location.io lookup API"
+
+  [setup.config_stores]
+
+    [setup.config_stores.ip2location_config]
+      description = "Settings for ip2location-headers"
+
+  [setup.secret_stores]
+
+    [setup.secret_stores.ip2location_secret]
+      description = "IP2LOCATION_API_KEY for ip2location-headers"
+
+[local_server]
+
+  [local_server.backends]
+
+    [local_server.backends.ip2location]
+      url = "https://api.ip2location.io/"
+
+    [local_server.backends.origin]
+      url = "https://example.com"
+
+  # Lets `fastly compute serve` exercise the real settings path instead of
+  # falling through to defaults. Mirrors the deployed ip2location_config store.
+  [local_server.config_stores]
+
+    [local_server.config_stores.ip2location_config]
+      format = "inline-toml"
+
+      [local_server.config_stores.ip2location_config.contents]
+        ALLOW_QUERY_IP = "1"
+
+[scripts]
+  build = "npx js-compute-runtime ./src/index.ts ./bin/main.wasm"
