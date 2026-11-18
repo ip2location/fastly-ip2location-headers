@@ -210,7 +210,7 @@ These values are illustrative, not a guaranteed response for a particular IP add
 
 ## Caching and API usage
 
-The service uses [Fastly SimpleCache](https://www.fastly.com/documentation/reference/compute/javascript/fastly-cache/) for lookups:
+The service uses [Fastly SimpleCache](https://www.fastly.com/documentation/reference/compute/sdks/javascript/js-compute/cache/class.SimpleCache) for lookups:
 
 - IPv4 lookups use a `/24` network key.
 - IPv6 lookups use a `/48` network key.
